@@ -15,8 +15,8 @@ switch ($page) {
         require_once 'controllers/AgentController.php';
         break;
     case 'cockpit':
-        require_once 'controllers/CockpitController.php';
-        break;
+        // require_once 'controllers/CockpitController.php';
+        // break;
     default:
         echo 'Page not found!';
         exit;
