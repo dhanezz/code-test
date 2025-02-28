@@ -2,10 +2,10 @@
 
 class ApiClient
 {
-    private string $baseUrl;
-    private array $header;
+    private $baseUrl;
+    private $header;
 
-    function __construct(string $baseUrl, array $header)
+    function __construct(string $baseUrl, array $header = [])
     {
         $this->baseUrl = rtrim($baseUrl, '/');
         $this->header = $header;
@@ -15,7 +15,15 @@ class ApiClient
     public function get(string $endpoint): array
     {
         $url = $this->baseUrl . '/' . ltrim($endpoint, '/');
-        $response = file_get_contents($url);
+        $options = [
+            'http' => [
+                'header' => $this->formatHeaders($this->header),
+                'method' => 'GET'
+            ]
+        ];
+
+        $context = stream_context_create($options);
+        $response = file_get_contents($url, false, $context);
 
         return $this->handleResponse($response);
     }
@@ -42,13 +50,24 @@ class ApiClient
         return $this->handleResponse($response);
     }
 
-    private function handleResponse(string $response)
+    private function handleResponse(string $response): array
     {
-        return json_decode($response, true);
+        return $response ? json_decode($response, true) : ['error' => $response];
     }
 
     private function formatHeaders(array $headers)
     {
         return implode("\r\n", $headers);
+    }
+
+    // GETTERS AND SETTERS
+    public function getHeader(): array
+    {
+        return $this->header;
+    }
+
+    public function setHeader(array $headers): void
+    {
+        $this->header = $headers;
     }
 }
