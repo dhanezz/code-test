@@ -4,9 +4,9 @@ require_once "core/ApiClient.php";
 class AgentApiClient extends ApiClient
 {
     // Gets all the Fractions
-    public function getFractions(): array
+    public function getFactions(): array
     {
-        return $this->get("/factions")["data"];
+        return $this->get("factions")["data"];
     }
 
     public function createNewAgent(array $data): array

@@ -35,6 +35,10 @@ class ApiClient
         $context = stream_context_create($options);
         $response = file_get_contents($url, false, $context);
 
+        if ($response === false) {
+            throw new Exception('Error communicating with the API.');
+        }
+
         return $this->handleResponse($response);
     }
 
@@ -45,6 +49,6 @@ class ApiClient
 
     private function formatHeaders(array $headers)
     {
-        return implode('\r\n', $headers);
+        return implode("\r\n", $headers);
     }
 }
