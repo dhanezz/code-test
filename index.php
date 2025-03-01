@@ -1,5 +1,6 @@
 <?php
 require_once "config.php";
+require_once "core/Utilities.php"
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +23,6 @@ require_once "config.php";
 </head>
 
 <body class="d-flex flex-column">
-
     <main class="flex-shrink-0">
         <div class="container">
             <!-- shows the content in the view -->
@@ -33,8 +33,18 @@ require_once "config.php";
     <!-- <footer class="footer px-3 bg-dark">
         <p class="text-light">&copy; <?php echo date("Y"); ?> Code-Test</p>
     </footer> -->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        const alertList = document.querySelectorAll('.alert')
+        alertList.forEach(function(alert) {
+            new bootstrap.Alert(alert);
+
+            let alertTimeout = alert.getAttribute('data-timeout');
+            setTimeout(() => {
+                bootstrap.Alert.getInstance(alert).close();
+            }, +alertTimeout);
+        });
+    </script>
 </body>
 
 </html>

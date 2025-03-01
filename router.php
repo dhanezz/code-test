@@ -1,10 +1,32 @@
 <?php
+require_once 'api/AgentApiClient.php';
+
 //starting session
 session_start();
-//TODO: Wenn Agent Token gesetzt wuzde dann cockpit starten
 
 $isAgentRegistered = isset($_SESSION["AGENT_TOKEN"]);
+if ($isAgentRegistered) {
+    $agentApi = new AgentApiClient(getenv('SPACETRADERS_API_URL'), [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $_SESSION['AGENT_TOKEN']
+    ]);
 
+    try {
+        $response = $agentApi->getAgent();
+        if ($response['status'] == 'error' && $response['code'] == 401) {
+
+            // Because of the server reset, I have to check if the dates still matches or else the token won't work anymore
+            if ($response['data']['actual'] != date('Y-m-d')) {
+                echo getAlert('alert-warning', 'Session expired!');
+                unset($_SESSION['AGENT_TOKEN']);
+            }
+        }
+    } catch (Exception $e) {
+        throw new Exception($e->getMessage(), $e->getCode());
+    }
+}
+
+//TODO: Wenn Agent Token gesetzt wuzde dann cockpit starte
 $page = $_GET['page'] ?? (!$isAgentRegistered ? 'home' : 'cockpit');
 
 switch ($page) {
@@ -15,8 +37,8 @@ switch ($page) {
         require_once 'controllers/AgentController.php';
         break;
     case 'cockpit':
-        // require_once 'controllers/CockpitController.php';
-        // break;
+        require_once 'controllers/CockpitController.php';
+        break;
     default:
         echo 'Page not found!';
         exit;

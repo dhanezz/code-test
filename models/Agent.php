@@ -16,6 +16,19 @@ class Agent extends BaseClass
         $this->mapToClass($data);
     }
 
+    public function getSystemSymbol(): string
+    {
+        $waypointArray = explode('-', $this->headquarters);
+        array_pop($waypointArray);
+        return implode('-', $waypointArray);
+    }
+
+    public function getWaypointSystem(): string
+    {
+        $waypointArray = explode('-', $this->headquarters);
+        return end($waypointArray);
+    }
+
     // GETTERS AND SETTERS
 
     public function getAccountId(): string

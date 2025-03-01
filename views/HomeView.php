@@ -4,8 +4,8 @@
             <h3>Welcome to Spacetraders</h3>
         </div>
         <div class="card-body mx-auto">
-            <a class="btn btn-warning" href="/?page=agent">Register Agent</a>
-            <a class="btn btn-warning" href="/?page=agent&load=1">Load Agent</a>
+            <a class="btn btn-warning" href="/?page=agent&action=register">Register Agent</a>
+            <a class="btn btn-warning" href="/?page=agent&action=load">Load Agent</a>
         </div>
     </div>
 </div>

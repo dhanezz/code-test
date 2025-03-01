@@ -6,7 +6,7 @@ class AgentApiClient extends ApiClient
     // Gets all the Fractions
     public function getFactions(): array
     {
-        return $this->get("factions")["data"];
+        return $this->get("factions");
     }
 
     public function createNewAgent(array $data): array
@@ -29,6 +29,11 @@ class AgentApiClient extends ApiClient
             $this->setHeader($headers);
         }
 
-        return $this->get("my/agent")["data"] ?? [];
+        return $this->get('my/agent');
+    }
+
+    public function getStartingLocation(string $systemSymbol, string $waypointSymbol): array
+    {
+        return $this->get("systems/$systemSymbol/waypoints/$waypointSymbol");
     }
 }

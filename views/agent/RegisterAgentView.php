@@ -2,10 +2,6 @@
 if (isset($_GET['success'])) {
     echo '<div class="alert alert-sucess" role="alert">Agent created</div>';
 }
-if (!isset($factionsOptions)) {
-    echo "Error: factionsOptions is not set!";
-    exit;
-}
 ?>
 
 
@@ -15,7 +11,8 @@ if (!isset($factionsOptions)) {
             Register Agent
         </div>
         <div class="card-body">
-            <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action"?page=agent">
+            <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action"?page=agent&action=register_agent">
+                <input type="hidden" name="action" value="register_agent">
                 <div class="col-12">
                     <label class="visually-hidden" for="agentName">Agent Name</label>
                     <input type="text" class="form-control" id="agentName" name="symbol" placeholder="Enter Agent Name">

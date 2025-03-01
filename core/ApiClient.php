@@ -18,7 +18,8 @@ class ApiClient
         $options = [
             'http' => [
                 'header' => $this->formatHeaders($this->header),
-                'method' => 'GET'
+                'method' => 'GET',
+                'ignore_errors' => true,
             ]
         ];
 
@@ -36,7 +37,8 @@ class ApiClient
             'http' => [
                 'header' => $this->formatHeaders($this->header),
                 'method' => 'POST',
-                'content' => json_encode($data)
+                'content' => json_encode($data),
+                'ignore_errors' => true
             ]
         ];
 
@@ -52,7 +54,19 @@ class ApiClient
 
     private function handleResponse(string $response): array
     {
-        return $response ? json_decode($response, true) : ['error' => $response];
+        $res = json_decode($response, true);
+
+        $status['status'] = 'success';
+
+        if (isset($res['error'])) {
+            $status['status'] = 'error';
+
+            $res = array_merge($status, $res['error']);
+        } else {
+            $res = array_merge($status, $res);
+        }
+
+        return $res;
     }
 
     private function formatHeaders(array $headers)
