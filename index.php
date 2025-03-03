@@ -25,6 +25,7 @@ require_once "core/Utilities.php"
 <body class="d-flex flex-column">
     <main class="flex-shrink-0">
         <div class="container">
+            <div class="alert-wrapper alert-fixed"></div>
             <!-- shows the content in the view -->
             <?php require_once "router.php"; ?>
         </div>

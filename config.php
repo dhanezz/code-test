@@ -6,3 +6,6 @@ foreach ($lines as $line) {
     if (strpos(trim($line), "#") === 0) continue; // Skip comments
     putenv($line);
 }
+
+define('HUMAN_DATETIME_FORMAT', 'd.m.Y H:i');
+define('LOCALE_CURRENCY', 'de_DE');

@@ -8,7 +8,7 @@ $agentApi = new AgentApiClient(getenv('SPACETRADERS_API_URL'), [
     'Authorization: Bearer ' . getenv('SPACETRADERS_ACCESS_TOKEN')
 ]);
 
-if ($action == 'register') {
+if ($action == 'register' || isset($_GET['error'])) {
     $factionsOptions = '';
     // Gets the factions
     try {
@@ -37,12 +37,12 @@ if (isset($_POST['action']) ? $_POST['action'] == 'register_agent' : false) {
             $newAgent = ['symbol' => $symbol, 'faction' => $faction];
             $response = $agentApi->createNewAgent($newAgent);
 
-            if ($response['success']) {
+            if ($response['status'] == 'success') {
                 $_SESSION['AGENT_TOKEN'] = $response['data']['token'];
                 header('Location: ?page=cockpit');
             } else {
-                header('Location: ?page=agent&error=1');
                 echo getAlert('alert-danger', $response['message']);
+                header('Location: ?page=agent&error=1');
             }
         } else {
             echo getAlert('alert-danger', 'Agent Name and Faction should not be empty!');
@@ -57,7 +57,7 @@ if ($action == 'load_agent_data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 
         if ($response['status'] == 'error') {
             echo getAlert('alert-danger', 'Token is not valid!');
-        } else if ($response['status'] == 'success' && !empty($response['data']['accountId'])) {
+        } elseif ($response['status'] == 'success' && !empty($response['data']['accountId'])) {
             $_SESSION['AGENT_TOKEN'] = $agentToken;
         }
     } else {

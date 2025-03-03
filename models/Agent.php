@@ -10,11 +10,8 @@ class Agent extends BaseClass
     public string $credits;
     public string $startingFaction;
     public string $shipCount;
-
-    public function __construct(array $data)
-    {
-        $this->mapToClass($data);
-    }
+    public array $startingLocation;
+    public array $contracts;
 
     public function getSystemSymbol(): string
     {
@@ -25,8 +22,13 @@ class Agent extends BaseClass
 
     public function getWaypointSystem(): string
     {
-        $waypointArray = explode('-', $this->headquarters);
-        return end($waypointArray);
+        return $this->headquarters;
+    }
+
+    public function getCurrentLocation(string $symbol): string
+    {
+        if ($symbol == $this->headquarters) return "Headquarters ($symbol)";
+        return $symbol;
     }
 
     // GETTERS AND SETTERS
@@ -61,6 +63,16 @@ class Agent extends BaseClass
         return $this->shipCount;
     }
 
+    public function getStartingLocation(): array
+    {
+        return $this->startingLocation;
+    }
+
+    public function getContracts(): array
+    {
+        return $this->contracts;
+    }
+
     public function setAccountId(string $accountId): void
     {
         $this->accountId = $accountId;
@@ -89,5 +101,15 @@ class Agent extends BaseClass
     public function setShipCount(string $shipCount): void
     {
         $this->shipCount = $shipCount;
+    }
+
+    public function setStartingLocation(array $startingLocation): void
+    {
+        $this->startingLocation = $startingLocation;
+    }
+
+    public function setContracts(array $contracts): void
+    {
+        $this->contracts = $contracts;
     }
 }

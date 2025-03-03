@@ -2,26 +2,60 @@
 
 ?>
 
-<div class="card text-center bg-transparent">
-    <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="true" href="#">Map</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li>
+<nav class="navbar bg-transparent">
+    <div class="container-fluid">
+        <a class="nav-brand nav-link pixelify-sans-regular dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <?= $agent->getSymbol() ?>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="?page=home&action=logout">Logout</a></li>
         </ul>
+        <div class="d-flex flex-column" id="credits">
+            <span class="me-2 pixelify-sans-regular">🪙&nbsp;<?= $agent->getCredits(); ?></span>
+            <p class="me-2 pixelify-sans-regular fs-6">Ship(s):&nbsp;<?= $agent->getShipCount(); ?></p>
+        </div>
     </div>
-    <div class="card-body">
-        [TBD]
-    </div>
+</nav>
+
+<div class="container-typewriter">
+    <div class="typed-out pixelfiy-sans-regular">Current Location: <?= $agent->getCurrentLocation($startingLocationSymbol) ?></div>
 </div>
 
-<div id="xyzcoordinates" class="text-light"></div>
+<div class="d-none">
+    <img id="headquarters" src="assets/images/headquarters.png" alt="headquarters">
+</div>
 
 <div class="container">
-    <div class="map-canvas"></div>
+    <div class="row">
+        <div class="col-6">
+            <!-- <div class="map-canvas"></div> -->
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header pixelify-sans-regular">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="contracts-tab" data-bs-toggle="tab" data-bs-target="#contracts-tab-pane" type="button" role="tab" aria-controls="contracts-tab-pane" aria-selected="true">Contracts</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ships-tab" data-bs-toggle="tab" data-bs-target="#ships-tab-pane" type="button" role="tab" aria-controls="ships-tab-pane" aria-selected="false">Ships</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="contracts-tab-pane" role="tabpanel" aria-labelledby="contracts-tab" tabindex="0">
+                            <div class="accordion container" id="contracts">
+                                <?= $contractsHTML ?>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show active" id="ships-tab-pane" role="tabpanel" aria-labelledby="ships-tab" tabindex="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -32,17 +66,11 @@
         viewBox: [0, 0, 100, 100],
         scaleMode: 'fit'
     });
-
-    let angle = 0;
-
-    (function draw() {
-        // draw a rectangle in the center of the canvas
-        ctx.fillRect(40, 40, 20, 20);
-
-        requestAnimationFrame(draw);
-    })();
-
+    const image = document.getElementById("headquarters");
     const canvas = ctx.canvas;
+
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+
     if (canvas) {
         canvas.addEventListener('mousemove', (e) => {
             // Get mouse position relative to the canvas

@@ -5,7 +5,7 @@ class ApiClient
     private $baseUrl;
     private $header;
 
-    function __construct(string $baseUrl, array $header = [])
+    public function __construct(string $baseUrl, array $header = [])
     {
         $this->baseUrl = rtrim($baseUrl, '/');
         $this->header = $header;
@@ -25,8 +25,9 @@ class ApiClient
 
         $context = stream_context_create($options);
         $response = file_get_contents($url, false, $context);
+        $headers = get_headers($url, true);
 
-        return $this->handleResponse($response);
+        return $this->handleResponse($response, $headers);
     }
 
     // Send a POST request
@@ -52,18 +53,31 @@ class ApiClient
         return $this->handleResponse($response);
     }
 
-    private function handleResponse(string $response): array
+    private function handleResponse(string $response, array $headers = []): array
     {
         $res = json_decode($response, true);
+        $sessionValid = true;
 
-        $status['status'] = 'success';
+        if (isset($headers['X-Ratelimit-Reset'])) {
+            $ratelimitReset = new DateTime($headers['X-Ratelimit-Reset']);
+            if (new DateTime('now') > $ratelimitReset) {
+                $sessionValid = false;
+            }
+        }
 
-        if (isset($res['error'])) {
-            $status['status'] = 'error';
-
-            $res = array_merge($status, $res['error']);
+        if ($sessionValid === false) {
+            $res = [
+                'status' => 'error',
+                'message' => 'Session is expired.',
+                'code' => 401
+            ];
         } else {
-            $res = array_merge($status, $res);
+            if (isset($res['error'])) {
+
+                $res = array_merge(['status' => 'error'], $res['error']);
+            } else {
+                $res = array_merge(['status' => 'success'], $res);
+            }
         }
 
         return $res;

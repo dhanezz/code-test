@@ -36,4 +36,19 @@ class AgentApiClient extends ApiClient
     {
         return $this->get("systems/$systemSymbol/waypoints/$waypointSymbol");
     }
+
+    public function getContracts(): array
+    {
+        return $this->get('my/contracts');
+    }
+
+    public function acceptContract(string $contractId): array
+    {
+        return $this->post("my/contracts/$contractId/accept", []);
+    }
+
+    public function getShips(): array
+    {
+        return $this->get('my/ships');
+    }
 }
